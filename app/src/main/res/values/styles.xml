@@ -1,0 +1,39 @@
+<resources>
+
+    <style name="AppThemeRoot" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#b71c1c</item>
+        <item name="colorPrimaryDark">#b71c1c</item>
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">#b71c1c</item>
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="tab_item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="EditTextTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlNormal">@android:color/darker_gray</item>
+        <item name="colorControlActivated">#b71c1c</item>
+    </style>
+
+    <style name="TextInputLayoutTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlNormal">@android:color/darker_gray</item>
+        <item name="colorControlActivated">@android:color/black</item>
+    </style>
+
+    <style name="AppThemeRoot.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppThemeRoot.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@android:color/darker_gray</item>
+        <item name="colorControlActivated">#b71c1c</item>
+    </style>
+
+</resources>

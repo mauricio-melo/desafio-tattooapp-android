@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:checked="true"
+        android:icon="@drawable/icone_home"
+        android:title=""
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_bau"
+        android:checked="false"
+        android:icon="@drawable/icone_bau"
+        android:title=""
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_camera"
+        android:checked="false"
+        android:icon="@drawable/icone_camera"
+        android:title=""
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_negocio"
+        android:checked="false"
+        android:icon="@drawable/icone_negocio"
+        android:title=""
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_config"
+        android:checked="false"
+        android:icon="@drawable/icone_config"
+        android:title=""
+        app:showAsAction="always" />
+</menu>

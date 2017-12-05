@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">DesafioTattooApp</string>
+    <string name="title_home">Home</string>
+    <string name="title_bau">Bau</string>
+    <string name="title_camera">Camera</string>
+    <string name="title_negociacao">Negociacao</string>
+    <string name="title_config">Config</string>
+</resources>
