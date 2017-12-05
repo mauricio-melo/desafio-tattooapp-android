@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import br.com.newidea.desafiotattooapp.R;
 import br.com.newidea.desafiotattooapp.component.NumberTextWatcher;
 import br.com.newidea.desafiotattooapp.dto.request.TattooRequestDTO;
+import br.com.newidea.desafiotattooapp.remote.generator.RemoteServiceGenerator;
+import br.com.newidea.desafiotattooapp.remote.service.TattooRemoteService;
+import br.com.newidea.desafiotattooapp.utils.ImageUtils;
 import lombok.NonNull;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +40,8 @@ public class TattooPostActivity extends AppCompatActivity {
 
     private byte[] tattooPictureByteArray;
     private ProgressDialog progDailog;
+    private Toolbar toolbar;
+    private ImageView imgTattoo;
     private EditText edtDescricao;
     private EditText edtLocalCorpo;
     private EditText edtEstilo;
@@ -60,9 +65,9 @@ public class TattooPostActivity extends AppCompatActivity {
         setUpEdtEstilo();
         setUpEdtValor();
         setUpEdtNumeroSessoes();
-        setUpSpnBodyLocation();
+        setUpEdtLocalCorpo();
         setUpBtnPostarTattoo();
-        setUpEdtLocalCorpo()
+
     }
 
     private void setUpEdtNumeroSessoes() {
@@ -83,7 +88,7 @@ public class TattooPostActivity extends AppCompatActivity {
     }
 
     private void setUpEdtLocalCorpo(){
-        edtLocalCorpo = (EditText) findViewById(R.id.TattooPostActivity_localCorpo)
+        edtLocalCorpo = (EditText) findViewById(R.id.TattooPostActivity_localCorpo);
     }
 
     private void setUpBtnPostarTattoo() {
@@ -107,8 +112,8 @@ public class TattooPostActivity extends AppCompatActivity {
                             .base64ByteImagem(Base64.encodeToString(tattooPictureByteArray, Base64.DEFAULT))
                             .build();
 
-                    JobRemoteService trabalhoService = RemoteServiceGenerator.createService(JobRemoteService.class);
-                    Call<Void> call = trabalhoService.save(jobRequestDTO);
+                    TattooRemoteService trabalhoService = RemoteServiceGenerator.createService(TattooRemoteService.class);
+                    Call<Void> call = trabalhoService.save(tattooRequestDTO);
 
                     call.enqueue(new Callback<Void>() {
 
@@ -132,27 +137,27 @@ public class TattooPostActivity extends AppCompatActivity {
     }
 
     private boolean isValidInput() {
-        if (edtDescription.getText().toString().trim().equals("")) {
+        if (edtDescricao.getText().toString().trim().equals("")) {
             Toast.makeText(this, "Informe a descrição da tatuagem !", Toast.LENGTH_SHORT).show();
-            edtDescription.requestFocus();
+            edtDescricao.requestFocus();
             return false;
         }
 
-        if (edtStyle.getText().toString().trim().equals("")) {
+        if (edtEstilo.getText().toString().trim().equals("")) {
             Toast.makeText(this, "Informe o estilo da tatuagem !", Toast.LENGTH_SHORT).show();
-            edtStyle.requestFocus();
+            edtEstilo.requestFocus();
             return false;
         }
 
         if (getJobSuggestedValueAsBigDecimal().compareTo(new BigDecimal(0)) <= 0) {
             Toast.makeText(this, "Informe um valor para a tatuagem !", Toast.LENGTH_SHORT).show();
-            edtJobValue.requestFocus();
+            edtValor.requestFocus();
             return false;
         }
 
-        if (edtSessionsNumber.getText().toString().trim().equals("")) {
+        if (edtNumeroSessoes.getText().toString().trim().equals("")) {
             Toast.makeText(this, "Informe a quantidade de sessões para tatuar essa tatuagem !", Toast.LENGTH_SHORT).show();
-            edtSessionsNumber.requestFocus();
+            edtNumeroSessoes.requestFocus();
             return false;
         }
 
@@ -166,7 +171,7 @@ public class TattooPostActivity extends AppCompatActivity {
 
     private void setUpImgJob() {
 
-        final Uri uri = getIntent().getParcelableExtra("job");
+        final Uri uri = getIntent().getParcelableExtra("tattoo");
 
         Bitmap myBitmap = null;
         try {
@@ -177,52 +182,16 @@ public class TattooPostActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        jobPictureByteArray = ImageUtils.getBitMapBytes(myBitmap);
-        imgJob = (ImageView) findViewById(R.id.jobPostActivity_imgJob);
-        imgJob.setDrawingCacheEnabled(true);
-        imgJob.setImageBitmap(myBitmap);
-        imgJob.setScaleType(ImageView.ScaleType.FIT_XY);
-    }
-
-    private void setUpSpnBodyLocation() {
-        spnBodyLocation = (Spinner) findViewById(R.id.jobPostActivity_spnBodyLocation);
-
-        final ArrayList<String> locaisCorpo = new ArrayList<String>();
-
-        final TattooPostActivity _this = this;
-
-        BodyLocationRemoteService bodyLocationService = RemoteServiceGenerator.createService(BodyLocationRemoteService.class);
-        Call<List<BodyLocationResponseDTO>> call = bodyLocationService.listar();
-
-        call.enqueue(new Callback<List<BodyLocationResponseDTO>>() {
-            @Override
-            public void onResponse(Call<List<BodyLocationResponseDTO>> call, Response<List<BodyLocationResponseDTO>> response) {
-                if (response.isSuccessful()) {
-
-                    List<BodyLocationResponseDTO> bodyLocationList = response.body();
-
-                    for (BodyLocationResponseDTO location : bodyLocationList) {
-                        locaisCorpo.add(location.getName());
-                    }
-
-                    ArrayAdapter<String> adp = new ArrayAdapter<String>(_this, android.R.layout.simple_spinner_dropdown_item, locaisCorpo);
-                    spnBodyLocation.setAdapter(adp);
-                    spnBodyLocation.setVisibility(View.VISIBLE);
-                } else {
-                    // error response, no access to resource?
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<BodyLocationResponseDTO>> call, Throwable t) {
-                Log.d("Error", t.getMessage());
-            }
-        });
+        tattooPictureByteArray = ImageUtils.getBitMapBytes(myBitmap);
+        imgTattoo = (ImageView) findViewById(R.id.TattooPostActivity_imgTattoo);
+        imgTattoo.setDrawingCacheEnabled(true);
+        imgTattoo.setImageBitmap(myBitmap);
+        imgTattoo.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
     public void setUpToolbar() {
 
-        toolbar = (Toolbar) findViewById(R.id.jobPostActivity_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.TattooPostActivity_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setSubtitle("");
@@ -241,7 +210,7 @@ public class TattooPostActivity extends AppCompatActivity {
     public static void call(@NonNull final Activity activity, @NonNull final Uri picUri) {
 
         final Intent intentPostTrabalho = new Intent(activity, TattooPostActivity.class);
-        intentPostTrabalho.putExtra("job", picUri);
+        intentPostTrabalho.putExtra("tattoo", picUri);
         activity.startActivity(intentPostTrabalho);
     }
 }
