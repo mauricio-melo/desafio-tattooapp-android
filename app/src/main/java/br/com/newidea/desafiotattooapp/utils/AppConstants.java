@@ -6,7 +6,7 @@ public class AppConstants {
 
     public final static int ALL_PERMISSIONS_RESULT = 107;
 
-    public static final String BASE_URL = "https://tattooappapi.herokuapp.com/";
+    public static final String BASE_URL = "https://desafiotatttooapp.herokuapp.com/";
 
     public static final int RESULT_CANCELED = 0;
 
