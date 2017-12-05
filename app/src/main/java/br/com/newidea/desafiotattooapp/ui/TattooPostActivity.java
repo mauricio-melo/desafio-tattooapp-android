@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import br.com.newidea.desafiotattooapp.R;
 import br.com.newidea.desafiotattooapp.component.NumberTextWatcher;
+import br.com.newidea.desafiotattooapp.dto.request.TattooRequestDTO;
 import lombok.NonNull;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,12 +35,13 @@ import retrofit2.Response;
 
 public class TattooPostActivity extends AppCompatActivity {
 
+    private byte[] tattooPictureByteArray;
     private ProgressDialog progDailog;
-    private EditText descricao;
-    private Spinner localCorpo;
-    private EditText estilo;
-    private EditText numeroSessoes;
-    private EditText valor;
+    private EditText edtDescricao;
+    private EditText edtLocalCorpo;
+    private EditText edtEstilo;
+    private EditText edtNumeroSessoes;
+    private EditText edtValor;
     private Button btnPostarTattoo;
 
     @Override
@@ -55,28 +57,33 @@ public class TattooPostActivity extends AppCompatActivity {
         setUpImgJob();
         setUpToolbar();
         setUpEdtDescricao();
-        setUpEstilo();
-        setUpValor();
-        setUpNumeroSessoes();
+        setUpEdtEstilo();
+        setUpEdtValor();
+        setUpEdtNumeroSessoes();
         setUpSpnBodyLocation();
         setUpBtnPostarTattoo();
+        setUpEdtLocalCorpo()
     }
 
-    private void setUpNumeroSessoes() {
-        numeroSessoes = (EditText) findViewById(R.id.TattooPostActivity_numeroSessoes);
+    private void setUpEdtNumeroSessoes() {
+        edtNumeroSessoes = (EditText) findViewById(R.id.TattooPostActivity_numeroSessoes);
     }
 
-    private void setUpEstilo() {
-        estilo = (EditText) findViewById(R.id.TattooPostActivity_estilo);
+    private void setUpEdtEstilo() {
+        edtEstilo = (EditText) findViewById(R.id.TattooPostActivity_estilo);
     }
 
-    private void setUpValor() {
-        valor = (EditText) findViewById(R.id.TattooPostActivity_valor);
-        valor.addTextChangedListener(new NumberTextWatcher(valor));
+    private void setUpEdtValor() {
+        edtValor = (EditText) findViewById(R.id.TattooPostActivity_valor);
+        edtValor.addTextChangedListener(new NumberTextWatcher(edtValor));
     }
 
     private void setUpEdtDescricao() {
-        descricao = (EditText) findViewById(R.id.TattooPostActivity_descricao);
+        edtDescricao = (EditText) findViewById(R.id.TattooPostActivity_descricao);
+    }
+
+    private void setUpEdtLocalCorpo(){
+        edtLocalCorpo = (EditText) findViewById(R.id.TattooPostActivity_localCorpo)
     }
 
     private void setUpBtnPostarTattoo() {
@@ -89,18 +96,15 @@ public class TattooPostActivity extends AppCompatActivity {
                 if (isValidInput()) {
                     progDailog = ProgressDialog.show(TattooPostActivity.this, "Aguarde", "Efetuando postagem...", true);
 
-                    JobRequestDTO jobRequestDTO = JobRequestDTO.builder()
-                            .userId(LoggedUser.getInstance().getUserId())
-                            .itemId(null) //novo post
-                            .bodyLocationId(spnBodyLocation.getSelectedItemPosition() + 1L)
-                            .suggestedValue(getJobSuggestedValueAsBigDecimal())
-                            .suggestedSessionsNumber(Integer.parseInt(edtSessionsNumber.getText().toString()))
-                            .description(edtDescription.getText().toString())
-                            .visible(chkJobIsVisible.isChecked())
-                            .active(true)
-                            .style(edtStyle.getText().toString())
-                            .imageFileName("job.bpm")
-                            .base64ByteImagem(Base64.encodeToString(jobPictureByteArray, Base64.DEFAULT))
+                    TattooRequestDTO tattooRequestDTO = TattooRequestDTO.builder()
+                            .id(null) //novo post
+                            .descricao(edtDescricao.getText().toString())
+                            .localCorpo(edtLocalCorpo.getText().toString())
+                            .estilo(edtEstilo.getText().toString())
+                            .numeroSessoes(Integer.parseInt(edtNumeroSessoes.getText().toString()))
+                            .valor(getJobSuggestedValueAsBigDecimal())
+                            .imageFileName("tattoo.bpm")
+                            .base64ByteImagem(Base64.encodeToString(tattooPictureByteArray, Base64.DEFAULT))
                             .build();
 
                     JobRemoteService trabalhoService = RemoteServiceGenerator.createService(JobRemoteService.class);
@@ -156,7 +160,7 @@ public class TattooPostActivity extends AppCompatActivity {
     }
 
     private BigDecimal getJobSuggestedValueAsBigDecimal() {
-        String cleanString = edtJobValue.getText().toString().replaceAll("[R,$,.]", "");
+        String cleanString = edtValor.getText().toString().replaceAll("[R,$,.]", "");
         return new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
     }
 
